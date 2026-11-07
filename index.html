@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Boda</title>
+  
+  <!-- Icono de la pestaña (Favicon): Dos anillos de boda entrelazados -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='24' cy='36' r='16' fill='none' stroke='%23d4af37' stroke-width='5'/%3E%3Ccircle cx='40' cy='36' r='16' fill='none' stroke='%23e5c158' stroke-width='5'/%3E%3Cpolygon points='40,10 34,17 40,21 46,17' fill='%23f4d8df' stroke='%23d4a3b3' stroke-width='1.5'/%3E%3Cpath d='M24,20 A16,16 0 0,1 38.5,29' fill='none' stroke='%23d4af37' stroke-width='5.5'/%3E%3C/svg%3E">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #faf6f0;
+      display: flex;
+      justify-content: center;
+      font-family: 'Georgia', serif;
+      overflow-x: hidden;
+    }
+
+    /* Pantalla completa de bienvenida */
+    #pantalla-bienvenida {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: #faf6f0;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.9s ease, transform 0.9s ease, visibility 0.9s ease;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #pantalla-bienvenida.oculto {
+      opacity: 0;
+      transform: scale(1.08);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .texto-bienvenida {
+      color: #8c7355;
+      font-size: 20px;
+      margin-bottom: 30px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* Sobre elegante en CSS */
+    .sobre-contenedor {
+      position: relative;
+      width: 320px;
+      height: 220px;
+      background: linear-gradient(145deg, #f3ece1, #e6dccb);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(140, 115, 85, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid #dfd3c3;
+    }
+
+    .solapa {
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-top: 125px solid #dccbb5;
+      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.08));
+      z-index: 1;
+    }
+
+    .pliegue-inferior {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 0;
+      border-left: 160px solid #ebe2d5;
+      border-right: 160px solid #ebe2d5;
+      border-top: 110px solid transparent;
+      z-index: 0;
+    }
+
+    .btn-abrir {
+      position: relative;
+      z-index: 2;
+      margin-top: 15px;
+      background-color: #d4a3b3;
+      color: white;
+      border: 2px solid #fff8f0;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 2px;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(140, 115, 85, 0.3);
+      text-transform: uppercase;
+      font-family: 'Georgia', serif;
+      animation: latido 2s infinite ease-in-out;
+    }
+
+    @keyframes latido {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* En celular ocupa el 100% de borde a borde; en PC se centra hasta 500px */
+    .contenedor {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .contenedor img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Botones 100% transparentes y sin bordes */
+    .zona-link {
+      position: absolute;
+      left: 22%;
+      width: 56%;
+      height: 2.1%;
+      background: transparent;
+      cursor: pointer;
+      z-index: 10;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Posiciones calculadas sobre el lienzo base de 768x8000 */
+    .link-ceremonia { top: 33.75%; }
+    .link-recepcion { top: 39.10%; }
+    .link-confirmacion { top: 51.20%; }
+
+    /* Botón flotante para pausar/reproducir música */
+    .btn-musica {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(212, 163, 179, 0.95);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Portada con el sobre -->
+  <div id="pantalla-bienvenida" onclick="abrirInvitacion()">
+    <p class="texto-bienvenida">Tenemos una noticia muy especial para ti...</p>
+    <div class="sobre-contenedor">
+      <div class="pliegue-inferior"></div>
+      <div class="solapa"></div>
+      <button class="btn-abrir">✨ Abrir Invitación ✨</button>
+    </div>
+  </div>
+
+  <!-- 2. Reproductor flotante y etiqueta de audio -->
+  <button class="btn-musica" id="btnAudio" onclick="toggleMusica()">🎵</button>
+  <audio id="musica" loop preload="auto">
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 3. Invitación con los 3 botones transparentes -->
+  <div class="contenedor">
+    <img src="invitacion.png" alt="Invitación de Boda">
+    
+    <!-- Ceremonia Civil -->
+    <a href="https://maps.app.goo.gl/omBs7MatjjuWnC7Q7" target="_blank" rel="noopener noreferrer" class="zona-link link-ceremonia" aria-label="Ubicación Ceremonia Civil"></a>
+    
+    <!-- Recepción -->
+    <a href="https://maps.app.goo.gl/bmdMEVfDk4k2SDhp8" target="_blank" rel="noopener noreferrer" class="zona-link link-recepcion" aria-label="Ubicación Recepción"></a>
+    
+    <!-- Confirmación de Asistencia -->
+    <a href="https://forms.gle/LLrWa9FS3wjEWQB2A" target="_blank" rel="noopener noreferrer" class="zona-link link-confirmacion" aria-label="Confirmar Asistencia"></a>
+  </div>
+
+  <script>
+    const audio = document.getElementById('musica');
+    const btn = document.getElementById('btnAudio');
+    const bienvenida = document.getElementById('pantalla-bienvenida');
+    let reproducido = false;
+
+    function abrirInvitacion() {
+      bienvenida.classList.add('oculto');
+      iniciarAudio();
+    }
+
+    function iniciarAudio() {
+      if (!reproducido) {
+        audio.play().then(() => {
+          reproducido = true;
+          btn.innerText = '⏸️';
+        }).catch(() => {});
+      }
+    }
+
+    function toggleMusica() {
+      if (audio.paused) {
+        audio.play();
+        btn.innerText = '⏸️';
+      } else {
+        audio.pause();
+        btn.innerText = '🎵';
+      }
+    }
+  </script>
+</body>
+</html>
